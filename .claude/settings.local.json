@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.trmnl.com)",
+      "WebSearch",
+      "WebFetch(domain:docs.usetrmnl.com)",
+      "WebFetch(domain:trmnl.com)",
+      "WebFetch(domain:help.trmnl.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:open-meteo.com)",
+      "Bash(pip install:*)",
+      "Bash(python -c:*)",
+      "Bash(python test_render.py:*)",
+      "Bash(del \"C:\\\\Users\\\\scott\\\\Documents\\\\Projects\\\\trmnl_weather_app\\\\test_render.py\")",
+      "Bash(del \"C:\\\\Users\\\\scott\\\\Documents\\\\Projects\\\\trmnl_weather_app\\\\test_output.html\")",
+      "Bash(echo:*)",
+      "Bash(python server.py:*)"
+    ]
+  }
+}
