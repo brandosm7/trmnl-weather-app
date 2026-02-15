@@ -65,6 +65,7 @@ def update_trmnl():
         url = f"https://trmnl.com/api/custom_plugins/{config.TRMNL_PLUGIN_UUID}"
         headers = {
             "Content-Type": "application/json",
+            "Authorization": f"Bearer {config.TRMNL_API_KEY}",
         }
         payload = {
             "merge_variables": merge_vars,
