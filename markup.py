@@ -103,14 +103,14 @@ def generate_markup(weather_data):
     min_ws = min(wind_speeds) if wind_speeds else 0
     max_ws = max(wind_speeds) if wind_speeds else 1
     ws_range = max_ws - min_ws if max_ws != min_ws else 1
-    GRAPH_TOP, GRAPH_BOTTOM, SVG_H = 5, 38, 56
+    GRAPH_TOP, GRAPH_BOTTOM, SVG_H = 5, 36, 60
     x_pos = [round((i + 0.5) / n * 700) for i in range(n)]
     y_pos = [GRAPH_BOTTOM - round((ws - min_ws) / ws_range * (GRAPH_BOTTOM - GRAPH_TOP)) for ws in wind_speeds]
     points_str = " ".join(f"{x_pos[i]},{y_pos[i]}" for i in range(n))
     dots_svg = "".join(f'<circle cx="{x_pos[i]}" cy="{y_pos[i]}" r="3" fill="currentColor"/>' for i in range(n))
     LABEL_INDICES = [0, 3, 6, 9, 12, 15, 18]
     labels_svg = "".join(
-        f'<text x="{x_pos[i]}" y="{SVG_H - 2}" text-anchor="middle" font-size="14">{wind_speeds[i]} mph</text>'
+        f'<text x="{x_pos[i]}" y="{SVG_H - 2}" text-anchor="middle" font-size="17">{wind_speeds[i]} mph</text>'
         for i in LABEL_INDICES if i < n
     )
     wind_graph_svg = (
@@ -183,11 +183,11 @@ def generate_markup(weather_data):
             text-align: center;
         }}
         .hourly-time {{
-            font-size: 14px;
+            font-size: 18px;
             margin-bottom: 2px;
         }}
         .hourly-precip {{
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
         }}
 
@@ -213,10 +213,9 @@ def generate_markup(weather_data):
 
         /* Wind row */
         .wind-row {{
-            display: flex;
-            justify-content: space-between;
             padding: 6px 0;
             border-top: 1px solid #888;
+            margin-top: auto;
         }}
         .wind-slot {{
             flex: 1;
@@ -236,14 +235,13 @@ def generate_markup(weather_data):
             justify-content: space-between;
             border-top: 1px solid #888;
             padding-top: 8px;
-            margin-top: auto;
         }}
         .daily-slot {{
             flex: 1;
             text-align: center;
         }}
         .daily-day {{
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 4px;
         }}
@@ -252,8 +250,12 @@ def generate_markup(weather_data):
             display: flex;
             justify-content: center;
         }}
+        .daily-icon svg {{
+            width: 40px;
+            height: 40px;
+        }}
         .daily-temps {{
-            font-size: 14px;
+            font-size: 18px;
         }}
         .daily-high {{
             font-weight: 700;
@@ -293,3 +295,78 @@ def generate_markup(weather_data):
 </div>"""
 
     return markup
+
+
+def _build_wind_graph_svg(chart_hours, wind_unit):
+    """Build a compact wind speed SVG line graph for the Liquid template."""
+    wind_speeds = [h["wind_speed"] for h in chart_hours]
+    n = len(wind_speeds)
+    if not wind_speeds:
+        return ""
+    min_ws = min(wind_speeds)
+    max_ws = max(wind_speeds)
+    ws_range = max_ws - min_ws if max_ws != min_ws else 1
+    GRAPH_TOP, GRAPH_BOTTOM, SVG_H = 5, 36, 60
+    x_pos = [round((i + 0.5) / n * 700) for i in range(n)]
+    y_pos = [GRAPH_BOTTOM - round((ws - min_ws) / ws_range * (GRAPH_BOTTOM - GRAPH_TOP))
+             for ws in wind_speeds]
+    points_str = " ".join(f"{x_pos[i]},{y_pos[i]}" for i in range(n))
+    # Dots only at the 7 labeled positions to keep SVG compact
+    LABEL_INDICES = [0, 3, 6, 9, 12, 15, 18]
+    dots = "".join(
+        f'<circle cx="{x_pos[i]}" cy="{y_pos[i]}" r="3"/>'
+        for i in LABEL_INDICES if i < n
+    )
+    labels = "".join(
+        f'<text x="{x_pos[i]}" y="{SVG_H - 2}">{wind_speeds[i]} {wind_unit}</text>'
+        for i in LABEL_INDICES if i < n
+    )
+    return (
+        f'<svg viewBox="0 0 700 {SVG_H}" width="100%" height="{SVG_H}"'
+        f' preserveAspectRatio="none" style="display:block">'
+        f'<polyline points="{points_str}" fill="none" stroke="currentColor" stroke-width="2"/>'
+        f'<g fill="currentColor">{dots}</g>'
+        f'<g fill="currentColor" font-size="17" text-anchor="middle">{labels}</g>'
+        f'</svg>'
+    )
+
+
+def build_merge_variables(weather_data):
+    """Build the merge_variables dict for TRMNL webhook POST.
+
+    Maps weather data to the short variable names used by trmnl_template.html.
+    """
+    current = weather_data["current"]
+    hourly = weather_data["hourly"]
+    daily = weather_data["daily"]
+    chart_hours = weather_data["chart_hours"]
+
+    mv = {
+        "ci": current["icon"],
+        "ct": current["temp"],
+        "cs": current["temp_symbol"],
+        "cf": current["feels_like"],
+        "cp": current["precipitation"],
+        "ch": current["humidity"],
+        "cw": current["wind_speed"],
+        "cu": current["wind_unit"],
+    }
+
+    for i, h in enumerate(hourly[:7]):
+        mv[f"ht{i}"] = h["time"]
+        mv[f"hp{i}"] = h["precipitation"]
+
+    for i, d in enumerate(daily[:7]):
+        mv[f"dd{i}"] = d["day"]
+        mv[f"di{i}"] = d["icon"]
+        mv[f"dh{i}"] = d["high"]
+        mv[f"dl{i}"] = d["low"]
+
+    # Pre-computed bar heights for 19-position precipitation chart
+    bar_heights = [str(max(2, int(h["precipitation"] / 100 * 60))) for h in chart_hours]
+    mv["pb"] = ",".join(bar_heights)
+
+    # Pre-computed wind graph SVG
+    mv["wg"] = _build_wind_graph_svg(chart_hours, current["wind_unit"])
+
+    return mv
