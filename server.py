@@ -11,9 +11,11 @@ import os
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
+import requests
+
 import config
 from weather import fetch_weather, parse_weather_data
-from markup import generate_markup
+from markup import generate_markup, build_merge_variables
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,8 +24,8 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
-def build_markup():
-    """Fetch weather data and return generated HTML markup."""
+def fetch_data():
+    """Fetch and parse weather data."""
     log.info("Fetching weather data for (%.4f, %.4f)...", config.LATITUDE, config.LONGITUDE)
     raw = fetch_weather(
         config.LATITUDE, config.LONGITUDE,
@@ -31,16 +33,43 @@ def build_markup():
     )
     data = parse_weather_data(raw, config.TEMPERATURE_UNIT, config.WIND_SPEED_UNIT)
     log.info("Current: %s°, %s", data["current"]["temp"], data["current"]["description"])
+    return data
+
+
+def build_markup():
+    """Fetch weather data and return generated HTML markup."""
+    data = fetch_data()
     return generate_markup(data)
 
 
+def post_to_trmnl(merge_variables):
+    """POST merge_variables to TRMNL webhook API."""
+    if not config.TRMNL_PLUGIN_UUID:
+        log.warning("TRMNL_PLUGIN_UUID not set, skipping webhook POST")
+        return
+
+    url = f"https://usetrmnl.com/api/custom_plugins/{config.TRMNL_PLUGIN_UUID}"
+    headers = {"Authorization": f"Bearer {config.TRMNL_API_KEY}"}
+    payload = {"merge_variables": merge_variables}
+
+    log.info("Posting merge_variables to TRMNL webhook...")
+    resp = requests.post(url, json=payload, headers=headers, timeout=30)
+    log.info("TRMNL response: %s %s", resp.status_code, resp.text[:200])
+    resp.raise_for_status()
+
+
 def run_once(output_path="docs/index.html"):
-    """Generate HTML and write to output_path (for GitHub Actions)."""
-    markup = build_markup()
+    """Generate HTML, write to output_path, and POST to TRMNL webhook."""
+    data = fetch_data()
+    markup = generate_markup(data)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(markup)
     log.info("Wrote %d bytes to %s", len(markup), output_path)
+
+    # Send merge variables to TRMNL webhook
+    merge_vars = build_merge_variables(data)
+    post_to_trmnl(merge_vars)
 
 
 # Simple in-memory cache for the polling server
