@@ -12,8 +12,8 @@ TRMNL_PLUGIN_UUID = os.environ.get("TRMNL_PLUGIN_UUID", "") or "c0d6d16f-2184-4c
 TRMNL_API_KEY = os.environ.get("TRMNL_API_KEY", "") or "user_0f33hpqsdxfx0v8akvc7ilrg"
 
 # Units: "fahrenheit" or "celsius" for temperature, "mph" or "kmh" for wind
-TEMPERATURE_UNIT = os.environ.get("TEMPERATURE_UNIT", "fahrenheit")
-WIND_SPEED_UNIT = os.environ.get("WIND_SPEED_UNIT", "mph")
+TEMPERATURE_UNIT = os.environ.get("TEMPERATURE_UNIT", "") or "fahrenheit"
+WIND_SPEED_UNIT = os.environ.get("WIND_SPEED_UNIT", "") or "mph"
 
 # Update interval in hours (also controls weather cache TTL)
 UPDATE_INTERVAL_HOURS = 3
