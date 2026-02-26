@@ -49,11 +49,11 @@
             text-align: center;
         }
         .hourly-time {
-            font-size: 14px;
+            font-size: 18px;
             margin-bottom: 2px;
         }
         .hourly-precip {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
         }
 
@@ -79,10 +79,9 @@
 
         /* Wind row */
         .wind-row {
-            display: flex;
-            justify-content: space-between;
             padding: 6px 0;
             border-top: 1px solid #888;
+            margin-top: auto;
         }
         .wind-slot {
             flex: 1;
@@ -102,14 +101,13 @@
             justify-content: space-between;
             border-top: 1px solid #888;
             padding-top: 8px;
-            margin-top: auto;
         }
         .daily-slot {
             flex: 1;
             text-align: center;
         }
         .daily-day {
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 4px;
         }
@@ -118,8 +116,12 @@
             display: flex;
             justify-content: center;
         }
+        .daily-icon svg {
+            width: 40px;
+            height: 40px;
+        }
         .daily-temps {
-            font-size: 14px;
+            font-size: 18px;
         }
         .daily-high {
             font-weight: 700;
@@ -182,7 +184,7 @@
     <div class="bar-chart"><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div>
     </div>
 
-    <div class="wind-row"><svg viewBox="0 0 700 56" width="100%" height="56" preserveAspectRatio="none" style="display:block"><polyline points="18,38 55,38 92,38 129,22 166,16 203,22 239,22 276,5 313,5 350,5 387,5 424,10 461,16 497,32 534,27 571,22 608,22 645,16 682,10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="38" r="3" fill="currentColor"/><circle cx="55" cy="38" r="3" fill="currentColor"/><circle cx="92" cy="38" r="3" fill="currentColor"/><circle cx="129" cy="22" r="3" fill="currentColor"/><circle cx="166" cy="16" r="3" fill="currentColor"/><circle cx="203" cy="22" r="3" fill="currentColor"/><circle cx="239" cy="22" r="3" fill="currentColor"/><circle cx="276" cy="5" r="3" fill="currentColor"/><circle cx="313" cy="5" r="3" fill="currentColor"/><circle cx="350" cy="5" r="3" fill="currentColor"/><circle cx="387" cy="5" r="3" fill="currentColor"/><circle cx="424" cy="10" r="3" fill="currentColor"/><circle cx="461" cy="16" r="3" fill="currentColor"/><circle cx="497" cy="32" r="3" fill="currentColor"/><circle cx="534" cy="27" r="3" fill="currentColor"/><circle cx="571" cy="22" r="3" fill="currentColor"/><circle cx="608" cy="22" r="3" fill="currentColor"/><circle cx="645" cy="16" r="3" fill="currentColor"/><circle cx="682" cy="10" r="3" fill="currentColor"/><text x="18" y="54" text-anchor="middle" font-size="14">4 mph</text><text x="129" y="54" text-anchor="middle" font-size="14">7 mph</text><text x="239" y="54" text-anchor="middle" font-size="14">7 mph</text><text x="350" y="54" text-anchor="middle" font-size="14">10 mph</text><text x="461" y="54" text-anchor="middle" font-size="14">8 mph</text><text x="571" y="54" text-anchor="middle" font-size="14">7 mph</text><text x="682" y="54" text-anchor="middle" font-size="14">9 mph</text></svg>
+    <div class="wind-row"><svg viewBox="0 0 700 60" width="100%" height="60" preserveAspectRatio="none" style="display:block"><polyline points="18,36 55,36 92,36 129,20 166,15 203,20 239,20 276,5 313,5 350,5 387,5 424,10 461,15 497,31 534,26 571,20 608,20 645,15 682,10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="36" r="3" fill="currentColor"/><circle cx="55" cy="36" r="3" fill="currentColor"/><circle cx="92" cy="36" r="3" fill="currentColor"/><circle cx="129" cy="20" r="3" fill="currentColor"/><circle cx="166" cy="15" r="3" fill="currentColor"/><circle cx="203" cy="20" r="3" fill="currentColor"/><circle cx="239" cy="20" r="3" fill="currentColor"/><circle cx="276" cy="5" r="3" fill="currentColor"/><circle cx="313" cy="5" r="3" fill="currentColor"/><circle cx="350" cy="5" r="3" fill="currentColor"/><circle cx="387" cy="5" r="3" fill="currentColor"/><circle cx="424" cy="10" r="3" fill="currentColor"/><circle cx="461" cy="15" r="3" fill="currentColor"/><circle cx="497" cy="31" r="3" fill="currentColor"/><circle cx="534" cy="26" r="3" fill="currentColor"/><circle cx="571" cy="20" r="3" fill="currentColor"/><circle cx="608" cy="20" r="3" fill="currentColor"/><circle cx="645" cy="15" r="3" fill="currentColor"/><circle cx="682" cy="10" r="3" fill="currentColor"/><text x="18" y="58" text-anchor="middle" font-size="17">4 mph</text><text x="129" y="58" text-anchor="middle" font-size="17">7 mph</text><text x="239" y="58" text-anchor="middle" font-size="17">7 mph</text><text x="350" y="58" text-anchor="middle" font-size="17">10 mph</text><text x="461" y="58" text-anchor="middle" font-size="17">8 mph</text><text x="571" y="58" text-anchor="middle" font-size="17">7 mph</text><text x="682" y="58" text-anchor="middle" font-size="17">9 mph</text></svg>
     </div>
 
     <div class="daily-row">
