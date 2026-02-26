@@ -104,8 +104,7 @@ def generate_markup(weather_data):
     max_ws = max(wind_speeds) if wind_speeds else 1
     ws_range = max_ws - min_ws if max_ws != min_ws else 1
     GRAPH_TOP, GRAPH_BOTTOM, SVG_H = 5, 38, 56
-    x_step = 600 / (n - 1) if n > 1 else 0
-    x_pos = [round(50 + i * x_step) for i in range(n)]
+    x_pos = [round((i + 0.5) / n * 700) for i in range(n)]
     y_pos = [GRAPH_BOTTOM - round((ws - min_ws) / ws_range * (GRAPH_BOTTOM - GRAPH_TOP)) for ws in wind_speeds]
     points_str = " ".join(f"{x_pos[i]},{y_pos[i]}" for i in range(n))
     dots_svg = "".join(f'<circle cx="{x_pos[i]}" cy="{y_pos[i]}" r="3" fill="currentColor"/>' for i in range(n))
