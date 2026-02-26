@@ -1,0 +1,281 @@
+<div class="weather-container">
+    <style>
+        .weather-container {
+            width: 800px;
+            height: 480px;
+            font-family: sans-serif;
+            padding: 16px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Current conditions */
+        .current-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .current-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .current-temp {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .current-temp-symbol {
+            font-size: 28px;
+            font-weight: 400;
+            vertical-align: super;
+        }
+        .current-stats {
+            text-align: right;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Hourly section */
+        .hourly-header {
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
+            border-top: 1px solid #888;
+            padding-top: 8px;
+        }
+        .hourly-slot {
+            text-align: center;
+        }
+        .hourly-time {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .hourly-precip {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Precipitation bar chart */
+        .bar-chart {
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
+            align-items: flex-end;
+            height: 62px;
+            margin: 2px 0;
+        }
+        .bar-slot {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100%;
+        }
+        .bar {
+            width: 70%;
+            background: #000;
+            min-height: 2px;
+        }
+
+        /* Wind row */
+        .wind-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-top: 1px solid #888;
+        }
+        .wind-slot {
+            flex: 1;
+            text-align: center;
+        }
+        .wind-arrow {
+            font-size: 22px;
+            line-height: 1.2;
+        }
+        .wind-speed {
+            font-size: 12px;
+        }
+
+        /* Daily forecast */
+        .daily-row {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #888;
+            padding-top: 8px;
+            margin-top: auto;
+        }
+        .daily-slot {
+            flex: 1;
+            text-align: center;
+        }
+        .daily-day {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .daily-icon {
+            margin: 2px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .daily-temps {
+            font-size: 14px;
+        }
+        .daily-high {
+            font-weight: 700;
+        }
+        .daily-low {
+            margin-left: 4px;
+            opacity: 0.6;
+        }
+    </style>
+
+    <div class="current-row">
+        <div class="current-left">
+            <div style="width:80px;height:80px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="20" cy="16" r="8"/>
+        <line x1="20" y1="2" x2="20" y2="6"/><line x1="6" y1="16" x2="2" y2="16"/>
+        <line x1="9" y1="6" x2="11.5" y2="8.5"/><line x1="31" y1="6" x2="28.5" y2="8.5"/>
+        <line x1="34" y1="16" x2="36" y2="16"/>
+        <path d="M14 32 Q14 25 21 25 Q22 20 28 20 Q35 20 35 27 Q40 27 40 32 Q40 37 35 37 L18 37 Q14 37 14 32 Z"/>
+    </svg></div>
+            <div class="current-temp">
+                33<span class="current-temp-symbol">°F</span>
+            </div>
+        </div>
+        <div class="current-stats">
+            Feels Like: 24°F<br>
+            Precipitation: 3%<br>
+            Humidity: 63%<br>
+            Wind: 11 mph
+        </div>
+    </div>
+
+    <div class="hourly-header">
+            <div class="hourly-slot" style="grid-column:1">
+                <div class="hourly-time">6am</div>
+                <div class="hourly-precip">0%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:4">
+                <div class="hourly-time">9am</div>
+                <div class="hourly-precip">0%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:7">
+                <div class="hourly-time">12pm</div>
+                <div class="hourly-precip">1%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:10">
+                <div class="hourly-time">3pm</div>
+                <div class="hourly-precip">3%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:13">
+                <div class="hourly-time">6pm</div>
+                <div class="hourly-precip">1%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:16">
+                <div class="hourly-time">9pm</div>
+                <div class="hourly-precip">1%</div>
+            </div>
+            <div class="hourly-slot" style="grid-column:19">
+                <div class="hourly-time">12am</div>
+                <div class="hourly-precip">0%</div>
+            </div>
+    </div>
+
+    <div class="bar-chart"><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div>
+    </div>
+
+    <div class="wind-row"><svg viewBox="0 0 700 56" width="100%" height="56" style="display:block"><polyline points="50,38 83,38 117,38 150,24 183,19 217,24 250,19 283,10 317,5 350,5 383,5 417,10 450,14 483,14 517,29 550,24 583,19 617,19 650,14" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="38" r="3" fill="currentColor"/><circle cx="83" cy="38" r="3" fill="currentColor"/><circle cx="117" cy="38" r="3" fill="currentColor"/><circle cx="150" cy="24" r="3" fill="currentColor"/><circle cx="183" cy="19" r="3" fill="currentColor"/><circle cx="217" cy="24" r="3" fill="currentColor"/><circle cx="250" cy="19" r="3" fill="currentColor"/><circle cx="283" cy="10" r="3" fill="currentColor"/><circle cx="317" cy="5" r="3" fill="currentColor"/><circle cx="350" cy="5" r="3" fill="currentColor"/><circle cx="383" cy="5" r="3" fill="currentColor"/><circle cx="417" cy="10" r="3" fill="currentColor"/><circle cx="450" cy="14" r="3" fill="currentColor"/><circle cx="483" cy="14" r="3" fill="currentColor"/><circle cx="517" cy="29" r="3" fill="currentColor"/><circle cx="550" cy="24" r="3" fill="currentColor"/><circle cx="583" cy="19" r="3" fill="currentColor"/><circle cx="617" cy="19" r="3" fill="currentColor"/><circle cx="650" cy="14" r="3" fill="currentColor"/><text x="50" y="54" text-anchor="middle" font-size="11">4</text><text x="150" y="54" text-anchor="middle" font-size="11">7</text><text x="250" y="54" text-anchor="middle" font-size="11">8</text><text x="350" y="54" text-anchor="middle" font-size="11">11</text><text x="450" y="54" text-anchor="middle" font-size="11">9</text><text x="550" y="54" text-anchor="middle" font-size="11">7</text><text x="650" y="54" text-anchor="middle" font-size="11">9</text></svg>
+    </div>
+
+    <div class="daily-row">
+            <div class="daily-slot">
+                <div class="daily-day">Today</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 34 Q12 27 19 27 Q20 22 26 22 Q33 22 33 29 Q38 29 38 34 Q38 39 33 39 L16 39 Q12 39 12 34 Z"/>
+        <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">34°</span>
+                    <span class="daily-low">14°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Fri</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 34 Q12 27 19 27 Q20 22 26 22 Q33 22 33 29 Q38 29 38 34 Q38 39 33 39 L16 39 Q12 39 12 34 Z"/>
+        <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">48°</span>
+                    <span class="daily-low">32°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Sat</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 22 Q12 15 19 15 Q20 10 26 10 Q33 10 33 17 Q38 17 38 22 Q38 27 33 27 L16 27 Q12 27 12 22 Z"/>
+        <line x1="16" y1="32" x2="16" y2="34"/><line x1="14.5" y1="33" x2="17.5" y2="33"/>
+        <line x1="24" y1="32" x2="24" y2="34"/><line x1="22.5" y1="33" x2="25.5" y2="33"/>
+        <line x1="32" y1="32" x2="32" y2="34"/><line x1="30.5" y1="33" x2="33.5" y2="33"/>
+        <line x1="20" y1="36" x2="20" y2="38"/><line x1="18.5" y1="37" x2="21.5" y2="37"/>
+        <line x1="28" y1="36" x2="28" y2="38"/><line x1="26.5" y1="37" x2="29.5" y2="37"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">41°</span>
+                    <span class="daily-low">23°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Sun</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 34 Q12 27 19 27 Q20 22 26 22 Q33 22 33 29 Q38 29 38 34 Q38 39 33 39 L16 39 Q12 39 12 34 Z"/>
+        <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">26°</span>
+                    <span class="daily-low">21°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Mon</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="24" cy="24" r="10"/>
+        <line x1="24" y1="2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="46"/>
+        <line x1="2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="46" y2="24"/>
+        <line x1="8.3" y1="8.3" x2="12.5" y2="12.5"/><line x1="35.5" y1="35.5" x2="39.7" y2="39.7"/>
+        <line x1="8.3" y1="39.7" x2="12.5" y2="35.5"/><line x1="35.5" y1="12.5" x2="39.7" y2="8.3"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">33°</span>
+                    <span class="daily-low">18°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Tue</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 22 Q12 15 19 15 Q20 10 26 10 Q33 10 33 17 Q38 17 38 22 Q38 27 33 27 L16 27 Q12 27 12 22 Z"/>
+        <line x1="16" y1="32" x2="16" y2="34"/><line x1="14.5" y1="33" x2="17.5" y2="33"/>
+        <line x1="24" y1="32" x2="24" y2="34"/><line x1="22.5" y1="33" x2="25.5" y2="33"/>
+        <line x1="32" y1="32" x2="32" y2="34"/><line x1="30.5" y1="33" x2="33.5" y2="33"/>
+        <line x1="20" y1="36" x2="20" y2="38"/><line x1="18.5" y1="37" x2="21.5" y2="37"/>
+        <line x1="28" y1="36" x2="28" y2="38"/><line x1="26.5" y1="37" x2="29.5" y2="37"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">39°</span>
+                    <span class="daily-low">26°</span>
+                </div>
+            </div>
+            <div class="daily-slot">
+                <div class="daily-day">Wed</div>
+                <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 34 Q12 27 19 27 Q20 22 26 22 Q33 22 33 29 Q38 29 38 34 Q38 39 33 39 L16 39 Q12 39 12 34 Z"/>
+        <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
+    </svg></div></div>
+                <div class="daily-temps">
+                    <span class="daily-high">40°</span>
+                    <span class="daily-low">32°</span>
+                </div>
+            </div>
+    </div>
+</div>
