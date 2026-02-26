@@ -1,11 +1,15 @@
-"""TRMNL Weather App - Fetches weather data and pushes to TRMNL display."""
+"""TRMNL Weather App server.
+
+Modes:
+  python server.py --once   Generate HTML to docs/index.html and exit (used by GitHub Actions)
+  python server.py          Run a local HTTP polling server on PORT (for local testing)
+"""
 
 import argparse
-import time
 import logging
-
-import requests
-import schedule
+import os
+import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import config
 from weather import fetch_weather, parse_weather_data
@@ -18,89 +22,81 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
-def update_trmnl():
-    """Fetch weather data, generate markup, and push to TRMNL."""
+def build_markup():
+    """Fetch weather data and return generated HTML markup."""
+    log.info("Fetching weather data for (%.4f, %.4f)...", config.LATITUDE, config.LONGITUDE)
+    raw = fetch_weather(
+        config.LATITUDE, config.LONGITUDE,
+        config.TEMPERATURE_UNIT, config.WIND_SPEED_UNIT,
+    )
+    data = parse_weather_data(raw, config.TEMPERATURE_UNIT, config.WIND_SPEED_UNIT)
+    log.info("Current: %s°, %s", data["current"]["temp"], data["current"]["description"])
+    return generate_markup(data)
+
+
+def run_once(output_path="docs/index.html"):
+    """Generate HTML and write to output_path (for GitHub Actions)."""
+    markup = build_markup()
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(markup)
+    log.info("Wrote %d bytes to %s", len(markup), output_path)
+
+
+# Simple in-memory cache for the polling server
+_cached_markup = None
+_cache_time = 0
+CACHE_TTL = config.UPDATE_INTERVAL_HOURS * 3600
+
+
+def get_markup_cached():
+    global _cached_markup, _cache_time
+    now = time.time()
+    if _cached_markup is None or (now - _cache_time) > CACHE_TTL:
+        try:
+            _cached_markup = build_markup()
+            _cache_time = now
+        except Exception:
+            log.exception("Failed to fetch weather data")
+            if _cached_markup is None:
+                _cached_markup = "<div>Weather data unavailable</div>"
+    return _cached_markup
+
+
+class WeatherHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        markup = get_markup_cached()
+        body = markup.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, fmt, *args):
+        log.info("Poll: " + fmt, *args)
+
+
+def run_server():
+    """Run a local HTTP server for testing."""
+    get_markup_cached()  # warm up cache
+    server = HTTPServer(("0.0.0.0", config.PORT), WeatherHandler)
+    log.info("Serving on http://localhost:%d  (cache TTL: %dh)", config.PORT, config.UPDATE_INTERVAL_HOURS)
     try:
-        log.info("Fetching weather data for (%.4f, %.4f)...", config.LATITUDE, config.LONGITUDE)
-        raw_data = fetch_weather(
-            config.LATITUDE,
-            config.LONGITUDE,
-            config.TEMPERATURE_UNIT,
-            config.WIND_SPEED_UNIT,
-        )
-
-        weather_data = parse_weather_data(raw_data, config.TEMPERATURE_UNIT, config.WIND_SPEED_UNIT)
-        log.info(
-            "Current: %s°, %s",
-            weather_data["current"]["temp"],
-            weather_data["current"]["description"],
-        )
-
-        # Build compact merge_variables for TRMNL (2KB limit)
-        merge_vars = {
-            "ct": weather_data["current"]["temp"],
-            "cs": weather_data["current"]["temp_symbol"],
-            "cp": weather_data["current"]["precipitation"],
-            "ch": weather_data["current"]["humidity"],
-            "cw": weather_data["current"]["wind_speed"],
-            "cu": weather_data["current"]["wind_unit"],
-            "ci": weather_data["current"]["icon"],
-        }
-
-        # Hourly data (7 slots)
-        for i, h in enumerate(weather_data["hourly"]):
-            merge_vars[f"ht{i}"] = h["time"]
-            merge_vars[f"hp{i}"] = h["precipitation"]
-            merge_vars[f"wa{i}"] = h["wind_arrow"]
-            merge_vars[f"ws{i}"] = h["wind_speed"]
-
-        # Daily data (7 days)
-        for i, d in enumerate(weather_data["daily"]):
-            merge_vars[f"dd{i}"] = d["day"]
-            merge_vars[f"dh{i}"] = d["high"]
-            merge_vars[f"dl{i}"] = d["low"]
-            merge_vars[f"di{i}"] = d["icon"]
-
-        # Push to TRMNL via webhook
-        url = f"https://trmnl.com/api/custom_plugins/{config.TRMNL_PLUGIN_UUID}"
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {config.TRMNL_API_KEY}",
-        }
-        payload = {
-            "merge_variables": merge_vars,
-        }
-
-        response = requests.post(url, json=payload, headers=headers, timeout=30)
-        if response.status_code >= 400:
-            log.error("TRMNL responded %d: %s", response.status_code, response.text)
-        response.raise_for_status()
-        log.info("Successfully pushed update to TRMNL (status %d)", response.status_code)
-
-    except requests.RequestException as e:
-        log.error("Request failed: %s", e)
-    except Exception:
-        log.exception("Unexpected error during update")
+        server.serve_forever()
+    except KeyboardInterrupt:
+        log.info("Shutting down.")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="TRMNL Weather App")
-    parser.add_argument("--once", action="store_true", help="Run once and exit (no scheduling)")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--once", action="store_true", help="Generate HTML to docs/index.html and exit")
     args = parser.parse_args()
 
     if args.once:
-        log.info("Running single update...")
-        update_trmnl()
-        return
-
-    log.info("Starting scheduler (every %d hours)...", config.UPDATE_INTERVAL_HOURS)
-    update_trmnl()  # Run immediately on start
-
-    schedule.every(config.UPDATE_INTERVAL_HOURS).hours.do(update_trmnl)
-
-    while True:
-        schedule.run_pending()
-        time.sleep(60)
+        run_once()
+    else:
+        run_server()
 
 
 if __name__ == "__main__":

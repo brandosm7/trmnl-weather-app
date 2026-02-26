@@ -79,31 +79,46 @@ def generate_markup(weather_data):
     hourly = weather_data["hourly"]
     daily = weather_data["daily"]
 
-    # Build hourly precipitation bars
-    max_precip = max((h["precipitation"] for h in hourly), default=1)
-    if max_precip == 0:
-        max_precip = 1  # Avoid division by zero
-
+    # Build hourly header labels (7 fixed-time labels on a 19-column grid)
+    chart_hours = weather_data["chart_hours"]
+    LABEL_COLS = [1, 4, 7, 10, 13, 16, 19]  # 1-indexed CSS grid-column positions
     hourly_slots_html = ""
-    precip_bars_html = ""
-    wind_slots_html = ""
-
-    for h in hourly:
-        bar_height = max(2, int((h["precipitation"] / 100) * 60))
+    for i, h in enumerate(hourly):
+        col = LABEL_COLS[i]
         hourly_slots_html += f"""
-            <div class="hourly-slot">
+            <div class="hourly-slot" style="grid-column:{col}">
                 <div class="hourly-time">{h["time"]}</div>
                 <div class="hourly-precip">{h["precipitation"]}%</div>
             </div>"""
-        precip_bars_html += f"""
-            <div class="bar-slot">
-                <div class="bar" style="height:{bar_height}px"></div>
-            </div>"""
-        wind_slots_html += f"""
-            <div class="wind-slot">
-                <div class="wind-arrow">{h["wind_arrow"]}</div>
-                <div class="wind-speed">{h["wind_speed"]} {current["wind_unit"]}</div>
-            </div>"""
+
+    # Build precipitation bar chart (19 bars from chart_hours)
+    precip_bars_html = ""
+    for h in chart_hours:
+        bar_height = max(2, int((h["precipitation"] / 100) * 60))
+        precip_bars_html += f'<div class="bar-slot"><div class="bar" style="height:{bar_height}px"></div></div>'
+
+    # Build wind speed line graph SVG (19 data points from chart_hours)
+    wind_speeds = [h["wind_speed"] for h in chart_hours]
+    n = len(wind_speeds)
+    min_ws = min(wind_speeds) if wind_speeds else 0
+    max_ws = max(wind_speeds) if wind_speeds else 1
+    ws_range = max_ws - min_ws if max_ws != min_ws else 1
+    GRAPH_TOP, GRAPH_BOTTOM, SVG_H = 5, 38, 56
+    x_step = 600 / (n - 1) if n > 1 else 0
+    x_pos = [round(50 + i * x_step) for i in range(n)]
+    y_pos = [GRAPH_BOTTOM - round((ws - min_ws) / ws_range * (GRAPH_BOTTOM - GRAPH_TOP)) for ws in wind_speeds]
+    points_str = " ".join(f"{x_pos[i]},{y_pos[i]}" for i in range(n))
+    dots_svg = "".join(f'<circle cx="{x_pos[i]}" cy="{y_pos[i]}" r="3" fill="currentColor"/>' for i in range(n))
+    LABEL_INDICES = [0, 3, 6, 9, 12, 15, 18]
+    labels_svg = "".join(
+        f'<text x="{x_pos[i]}" y="{SVG_H - 2}" text-anchor="middle" font-size="11">{wind_speeds[i]}</text>'
+        for i in LABEL_INDICES if i < n
+    )
+    wind_graph_svg = (
+        f'<svg viewBox="0 0 700 {SVG_H}" width="100%" height="{SVG_H}" style="display:block">'
+        f'<polyline points="{points_str}" fill="none" stroke="currentColor" stroke-width="2"/>'
+        f'{dots_svg}{labels_svg}</svg>'
+    )
 
     # Build daily forecast
     daily_html = ""
@@ -160,13 +175,12 @@ def generate_markup(weather_data):
 
         /* Hourly section */
         .hourly-header {{
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
             border-top: 1px solid #888;
             padding-top: 8px;
         }}
         .hourly-slot {{
-            flex: 1;
             text-align: center;
         }}
         .hourly-time {{
@@ -180,14 +194,13 @@ def generate_markup(weather_data):
 
         /* Precipitation bar chart */
         .bar-chart {{
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
             align-items: flex-end;
             height: 62px;
             margin: 2px 0;
         }}
         .bar-slot {{
-            flex: 1;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -260,6 +273,7 @@ def generate_markup(weather_data):
             </div>
         </div>
         <div class="current-stats">
+            Feels Like: {current["feels_like"]}{current["temp_symbol"]}<br>
             Precipitation: {current["precipitation"]}%<br>
             Humidity: {current["humidity"]}%<br>
             Wind: {current["wind_speed"]} {current["wind_unit"]}
@@ -272,7 +286,7 @@ def generate_markup(weather_data):
     <div class="bar-chart">{precip_bars_html}
     </div>
 
-    <div class="wind-row">{wind_slots_html}
+    <div class="wind-row">{wind_graph_svg}
     </div>
 
     <div class="daily-row">{daily_html}

@@ -15,5 +15,8 @@ TRMNL_API_KEY = os.environ.get("TRMNL_API_KEY", "") or "user_0f33hpqsdxfx0v8akvc
 TEMPERATURE_UNIT = os.environ.get("TEMPERATURE_UNIT", "fahrenheit")
 WIND_SPEED_UNIT = os.environ.get("WIND_SPEED_UNIT", "mph")
 
-# Update interval in hours
+# Update interval in hours (also controls weather cache TTL)
 UPDATE_INTERVAL_HOURS = 3
+
+# Port for the polling HTTP server
+PORT = int(os.environ.get("PORT", 5000))

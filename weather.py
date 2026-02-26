@@ -1,5 +1,5 @@
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 WEATHER_CODE_MAP = {
@@ -39,7 +39,7 @@ def fetch_weather(latitude, longitude, temperature_unit="fahrenheit", wind_speed
     url = (
         f"https://api.open-meteo.com/v1/forecast"
         f"?latitude={latitude}&longitude={longitude}"
-        f"&hourly=temperature_2m,precipitation_probability,relative_humidity_2m,"
+        f"&hourly=temperature_2m,apparent_temperature,precipitation_probability,relative_humidity_2m,"
         f"wind_speed_10m,wind_direction_10m,weather_code"
         f"&daily=weather_code,temperature_2m_max,temperature_2m_min"
         f"&temperature_unit={temperature_unit}"
@@ -97,6 +97,7 @@ def parse_weather_data(data, temperature_unit="fahrenheit", wind_speed_unit="mph
 
     current = {
         "temp": round(hourly["temperature_2m"][current_idx]),
+        "feels_like": round(hourly["apparent_temperature"][current_idx] or 0),
         "temp_symbol": temp_symbol,
         "precipitation": hourly["precipitation_probability"][current_idx] or 0,
         "humidity": hourly["relative_humidity_2m"][current_idx] or 0,
@@ -109,26 +110,39 @@ def parse_weather_data(data, temperature_unit="fahrenheit", wind_speed_unit="mph
     current["description"] = code_info[0]
     current["icon"] = code_info[1]
 
-    # Hourly forecast: next 7 slots at 3-hour intervals (~21 hours)
+    # Chart hours: 19 hourly data points from 6am today through midnight (00:00 tomorrow)
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    tomorrow_str = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+
+    target_times = [f"{today_str}T{h:02d}:00" for h in range(6, 24)]
+    target_times.append(f"{tomorrow_str}T00:00")
+
+    chart_hours = []
+    all_times = hourly["time"]
+    for t in target_times:
+        try:
+            idx = all_times.index(t)
+            wind_deg = hourly["wind_direction_10m"][idx] or 0
+            arrow, direction = _wind_direction_label(wind_deg)
+            chart_hours.append({
+                "time": t,
+                "precipitation": hourly["precipitation_probability"][idx] or 0,
+                "wind_speed": round(hourly["wind_speed_10m"][idx] or 0),
+                "wind_direction": direction,
+                "wind_arrow": arrow,
+            })
+        except ValueError:
+            continue
+
+    # Hourly labels: 7 display slots at fixed positions (6am, 9am, 12pm, 3pm, 6pm, 9pm, 12am)
+    LABEL_INDICES = [0, 3, 6, 9, 12, 15, 18]
+    label_times = ["6am", "9am", "12pm", "3pm", "6pm", "9pm", "12am"]
     hourly_forecast = []
-    for i in range(7):
-        idx = current_idx + (i * 3)
-        if idx >= len(hourly["time"]):
-            break
-        time_str = hourly["time"][idx]
-        dt = datetime.strptime(time_str, "%Y-%m-%dT%H:%M")
-        hour_label = dt.strftime("%I %p").lstrip("0")
-
-        wind_deg = hourly["wind_direction_10m"][idx] or 0
-        arrow, direction = _wind_direction_label(wind_deg)
-
-        hourly_forecast.append({
-            "time": hour_label,
-            "precipitation": hourly["precipitation_probability"][idx] or 0,
-            "wind_speed": round(hourly["wind_speed_10m"][idx] or 0),
-            "wind_direction": direction,
-            "wind_arrow": arrow,
-        })
+    for ci, label in zip(LABEL_INDICES, label_times):
+        if ci < len(chart_hours):
+            slot = dict(chart_hours[ci])
+            slot["time"] = label
+            hourly_forecast.append(slot)
 
     # Daily forecast: 7 days starting from today
     today_idx = _find_today_index(daily["time"])
@@ -159,5 +173,6 @@ def parse_weather_data(data, temperature_unit="fahrenheit", wind_speed_unit="mph
     return {
         "current": current,
         "hourly": hourly_forecast,
+        "chart_hours": chart_hours,
         "daily": daily_forecast,
     }

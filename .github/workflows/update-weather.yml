@@ -9,6 +9,8 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -19,10 +21,18 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Push weather update to TRMNL
+      - name: Generate weather HTML
         env:
-          TRMNL_PLUGIN_UUID: ${{ secrets.TRMNL_PLUGIN_UUID }}
-          TRMNL_API_KEY: ${{ secrets.TRMNL_API_KEY }}
           LATITUDE: ${{ vars.LATITUDE }}
           LONGITUDE: ${{ vars.LONGITUDE }}
+          TEMPERATURE_UNIT: ${{ vars.TEMPERATURE_UNIT }}
+          WIND_SPEED_UNIT: ${{ vars.WIND_SPEED_UNIT }}
         run: python server.py --once
+
+      - name: Commit and push docs/index.html
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          git diff --cached --quiet || git commit -m "Update weather display [skip ci]"
+          git push
