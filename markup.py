@@ -110,7 +110,7 @@ def generate_markup(weather_data):
     dots_svg = "".join(f'<circle cx="{x_pos[i]}" cy="{y_pos[i]}" r="3" fill="currentColor"/>' for i in range(n))
     LABEL_INDICES = [0, 3, 6, 9, 12, 15, 18]
     labels_svg = "".join(
-        f'<text x="{x_pos[i]}" y="{SVG_H - 2}" text-anchor="middle" font-size="11">{wind_speeds[i]}</text>'
+        f'<text x="{x_pos[i]}" y="{SVG_H - 2}" text-anchor="middle" font-size="14">{wind_speeds[i]} mph</text>'
         for i in LABEL_INDICES if i < n
     )
     wind_graph_svg = (
