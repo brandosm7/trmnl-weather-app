@@ -114,7 +114,7 @@ def generate_markup(weather_data):
         for i in LABEL_INDICES if i < n
     )
     wind_graph_svg = (
-        f'<svg viewBox="0 0 700 {SVG_H}" width="100%" height="{SVG_H}" style="display:block">'
+        f'<svg viewBox="0 0 700 {SVG_H}" width="100%" height="{SVG_H}" preserveAspectRatio="none" style="display:block">'
         f'<polyline points="{points_str}" fill="none" stroke="currentColor" stroke-width="2"/>'
         f'{dots_svg}{labels_svg}</svg>'
     )
