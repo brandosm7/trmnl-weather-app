@@ -135,18 +135,21 @@
     <div class="current-row">
         <div class="current-left">
             <div style="width:80px;height:80px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M12 34 Q12 27 19 27 Q20 22 26 22 Q33 22 33 29 Q38 29 38 34 Q38 39 33 39 L16 39 Q12 39 12 34 Z"/>
-        <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
+        <circle cx="20" cy="18" r="8"/>
+        <line x1="20" y1="4" x2="20" y2="8"/><line x1="8" y1="18" x2="4" y2="18"/>
+        <line x1="10" y1="8" x2="12.5" y2="10.5"/><line x1="30" y1="8" x2="27.5" y2="10.5"/>
+        <line x1="32" y1="18" x2="34" y2="18"/>
+        <path d="M16 30 Q16 24 22 24 Q22 20 28 20 Q34 20 34 26 Q38 26 38 30 Q38 34 34 34 L18 34 Q14 34 14 30 Z"/>
     </svg></div>
             <div class="current-temp">
-                52<span class="current-temp-symbol">°F</span>
+                59<span class="current-temp-symbol">°F</span>
             </div>
         </div>
         <div class="current-stats">
-            Feels Like: 44°F<br>
+            Feels Like: 55°F<br>
             Precipitation: 2%<br>
-            Humidity: 69%<br>
-            Wind: 12 mph
+            Humidity: 64%<br>
+            Wind: 13 mph
         </div>
     </div>
 
@@ -165,7 +168,7 @@
             </div>
             <div class="hourly-slot" style="grid-column:10">
                 <div class="hourly-time">3pm</div>
-                <div class="hourly-precip">2%</div>
+                <div class="hourly-precip">3%</div>
             </div>
             <div class="hourly-slot" style="grid-column:13">
                 <div class="hourly-time">6pm</div>
@@ -173,18 +176,18 @@
             </div>
             <div class="hourly-slot" style="grid-column:16">
                 <div class="hourly-time">9pm</div>
-                <div class="hourly-precip">5%</div>
+                <div class="hourly-precip">3%</div>
             </div>
             <div class="hourly-slot" style="grid-column:19">
                 <div class="hourly-time">12am</div>
-                <div class="hourly-precip">14%</div>
+                <div class="hourly-precip">18%</div>
             </div>
     </div>
 
-    <div class="bar-chart"><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:3px"></div></div><div class="bar-slot"><div class="bar" style="height:3px"></div></div><div class="bar-slot"><div class="bar" style="height:3px"></div></div><div class="bar-slot"><div class="bar" style="height:8px"></div></div>
+    <div class="bar-chart"><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:2px"></div></div><div class="bar-slot"><div class="bar" style="height:3px"></div></div><div class="bar-slot"><div class="bar" style="height:5px"></div></div><div class="bar-slot"><div class="bar" style="height:10px"></div></div>
     </div>
 
-    <div class="wind-row"><svg viewBox="0 0 700 60" width="100%" height="60" preserveAspectRatio="none" style="display:block"><polyline points="18,34 55,32 92,32 129,28 166,24 203,19 239,19 276,17 313,19 350,24 387,24 424,26 461,28 497,36 534,34 571,28 608,15 645,11 682,5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="34" r="3" fill="currentColor"/><circle cx="55" cy="32" r="3" fill="currentColor"/><circle cx="92" cy="32" r="3" fill="currentColor"/><circle cx="129" cy="28" r="3" fill="currentColor"/><circle cx="166" cy="24" r="3" fill="currentColor"/><circle cx="203" cy="19" r="3" fill="currentColor"/><circle cx="239" cy="19" r="3" fill="currentColor"/><circle cx="276" cy="17" r="3" fill="currentColor"/><circle cx="313" cy="19" r="3" fill="currentColor"/><circle cx="350" cy="24" r="3" fill="currentColor"/><circle cx="387" cy="24" r="3" fill="currentColor"/><circle cx="424" cy="26" r="3" fill="currentColor"/><circle cx="461" cy="28" r="3" fill="currentColor"/><circle cx="497" cy="36" r="3" fill="currentColor"/><circle cx="534" cy="34" r="3" fill="currentColor"/><circle cx="571" cy="28" r="3" fill="currentColor"/><circle cx="608" cy="15" r="3" fill="currentColor"/><circle cx="645" cy="11" r="3" fill="currentColor"/><circle cx="682" cy="5" r="3" fill="currentColor"/><text x="18" y="58" text-anchor="middle" font-size="17">7 mph</text><text x="129" y="58" text-anchor="middle" font-size="17">10 mph</text><text x="239" y="58" text-anchor="middle" font-size="17">14 mph</text><text x="350" y="58" text-anchor="middle" font-size="17">12 mph</text><text x="461" y="58" text-anchor="middle" font-size="17">10 mph</text><text x="571" y="58" text-anchor="middle" font-size="17">10 mph</text><text x="682" y="58" text-anchor="middle" font-size="17">21 mph</text></svg>
+    <div class="wind-row"><svg viewBox="0 0 700 60" width="100%" height="60" preserveAspectRatio="none" style="display:block"><polyline points="18,36 55,34 92,36 129,32 166,20 203,18 239,23 276,20 313,18 350,23 387,23 424,23 461,25 497,27 534,29 571,27 608,23 645,5 682,5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="36" r="3" fill="currentColor"/><circle cx="55" cy="34" r="3" fill="currentColor"/><circle cx="92" cy="36" r="3" fill="currentColor"/><circle cx="129" cy="32" r="3" fill="currentColor"/><circle cx="166" cy="20" r="3" fill="currentColor"/><circle cx="203" cy="18" r="3" fill="currentColor"/><circle cx="239" cy="23" r="3" fill="currentColor"/><circle cx="276" cy="20" r="3" fill="currentColor"/><circle cx="313" cy="18" r="3" fill="currentColor"/><circle cx="350" cy="23" r="3" fill="currentColor"/><circle cx="387" cy="23" r="3" fill="currentColor"/><circle cx="424" cy="23" r="3" fill="currentColor"/><circle cx="461" cy="25" r="3" fill="currentColor"/><circle cx="497" cy="27" r="3" fill="currentColor"/><circle cx="534" cy="29" r="3" fill="currentColor"/><circle cx="571" cy="27" r="3" fill="currentColor"/><circle cx="608" cy="23" r="3" fill="currentColor"/><circle cx="645" cy="5" r="3" fill="currentColor"/><circle cx="682" cy="5" r="3" fill="currentColor"/><text x="18" y="58" text-anchor="middle" font-size="17">6 mph</text><text x="129" y="58" text-anchor="middle" font-size="17">8 mph</text><text x="239" y="58" text-anchor="middle" font-size="17">12 mph</text><text x="350" y="58" text-anchor="middle" font-size="17">12 mph</text><text x="461" y="58" text-anchor="middle" font-size="17">11 mph</text><text x="571" y="58" text-anchor="middle" font-size="17">10 mph</text><text x="682" y="58" text-anchor="middle" font-size="17">20 mph</text></svg>
     </div>
 
     <div class="daily-row">
@@ -195,8 +198,8 @@
         <path d="M20 27 Q20 21 26 21 Q27 17 32 17 Q38 17 38 23 Q42 23 42 27 Q42 30 39 31" opacity="0.5"/>
     </svg></div></div>
                 <div class="daily-temps">
-                    <span class="daily-high">68°</span>
-                    <span class="daily-low">44°</span>
+                    <span class="daily-high">70°</span>
+                    <span class="daily-low">45°</span>
                 </div>
             </div>
             <div class="daily-slot">
@@ -215,11 +218,8 @@
                 <div class="daily-day">Wed</div>
                 <div class="daily-icon"><div style="width:32px;height:32px;display:inline-block;vertical-align:middle"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M12 22 Q12 15 19 15 Q20 10 26 10 Q33 10 33 17 Q38 17 38 22 Q38 27 33 27 L16 27 Q12 27 12 22 Z"/>
-        <line x1="16" y1="32" x2="16" y2="34"/><line x1="14.5" y1="33" x2="17.5" y2="33"/>
-        <line x1="24" y1="32" x2="24" y2="34"/><line x1="22.5" y1="33" x2="25.5" y2="33"/>
-        <line x1="32" y1="32" x2="32" y2="34"/><line x1="30.5" y1="33" x2="33.5" y2="33"/>
-        <line x1="20" y1="36" x2="20" y2="38"/><line x1="18.5" y1="37" x2="21.5" y2="37"/>
-        <line x1="28" y1="36" x2="28" y2="38"/><line x1="26.5" y1="37" x2="29.5" y2="37"/>
+        <line x1="14" y1="31" x2="12" y2="38"/><line x1="21" y1="31" x2="19" y2="38"/>
+        <line x1="28" y1="31" x2="26" y2="38"/><line x1="35" y1="31" x2="33" y2="38"/>
     </svg></div></div>
                 <div class="daily-temps">
                     <span class="daily-high">43°</span>
